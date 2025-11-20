@@ -1,0 +1,5 @@
+- verbose output
+- city as param
+- icons
+- json output
+- tests
