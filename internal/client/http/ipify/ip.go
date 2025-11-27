@@ -16,11 +16,15 @@ type Client struct {
 	httpClient *http.Client
 }
 
+type IPClient interface {
+	GetIP() (Response, error)
+}
+
 func NewClient(httpClient *http.Client) *Client {
 	return &Client{httpClient: httpClient}
 }
 
-func (c *Client) GetIp() (Response, error) {
+func (c *Client) GetIP() (Response, error) {
 	resp, err := c.httpClient.Get(ipServiceUrl)
 	if err != nil {
 		return Response{}, fmt.Errorf("error while getting IP address: %v", err)

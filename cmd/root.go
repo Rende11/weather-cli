@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/rende11/weather/internal/app"
 	"os"
 
-	"github.com/rende11/weather/internal/app"
 	"github.com/spf13/cobra"
 )
 
@@ -17,9 +17,14 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-
+	Args: cobra.ArbitraryArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		app.Run()
+		if len(args) == 0 {
+			app.Run("")
+			return
+		}
+		city := args[0]
+		app.Run(city)
 	},
 }
 

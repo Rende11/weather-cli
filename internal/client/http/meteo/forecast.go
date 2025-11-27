@@ -35,7 +35,7 @@ type Current struct {
 	WindSpeed   float64 `json:"wind_speed_10m"`
 }
 
-func (c *Client) Forecast(lat, long float64, timezone string) (Response, error) {
+func (c *Client) Forecast(lat, long float64, timezone string) (*Response, error) {
 	params := url.Values{}
 	params.Add("latitude", strconv.FormatFloat(lat, 'f', 2, 64))
 	params.Add("longitude", strconv.FormatFloat(long, 'f', 2, 64))
@@ -53,12 +53,12 @@ func (c *Client) Forecast(lat, long float64, timezone string) (Response, error) 
 	resp, err := c.httpClient.Get(reqUrl.String())
 
 	if err != nil {
-		return Response{}, fmt.Errorf("error while getting meteo: %v", err)
+		return nil, fmt.Errorf("error while getting meteo: %v", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return Response{}, fmt.Errorf("getting meteo status code %d", resp.StatusCode)
+		return nil, fmt.Errorf("getting meteo status code %d", resp.StatusCode)
 	}
 
 	var forecastResponse Response
@@ -66,8 +66,8 @@ func (c *Client) Forecast(lat, long float64, timezone string) (Response, error) 
 	err = json.NewDecoder(resp.Body).Decode(&forecastResponse)
 
 	if err != nil {
-		return Response{}, fmt.Errorf("error while parsing meteo response: %v", err)
+		return nil, fmt.Errorf("error while parsing meteo response: %v", err)
 	}
 
-	return forecastResponse, nil
+	return &forecastResponse, nil
 }
